@@ -3,9 +3,20 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+<<<<<<< HEAD
+=======
+    "start": "node index.js",
+>>>>>>> 0b47d38 (Initial commit - Adding all project files)
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
+<<<<<<< HEAD
   "description": ""
+=======
+  "description": "",
+  "dependencies": {
+    "eslint": "^9.22.0"
+  }
+>>>>>>> 0b47d38 (Initial commit - Adding all project files)
 }
