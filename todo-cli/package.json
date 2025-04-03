@@ -8,8 +8,8 @@
   },
   "lint-staged": {
     "*.js": [
-      "eslint --fix",
-      "prettier --write"
+      "eslint",
+      "prettier --write ."
     ]
   },
   "repository": {
