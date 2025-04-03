@@ -1,35 +1,5 @@
 {
-  "name": "201",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "husky install"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/AnanthaChary42/wd201.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/AnanthaChary42/wd201/issues"
-  },
-  "homepage": "https://github.com/AnanthaChary42/wd201#readme",
-  "description": "",
   "devDependencies": {
-    "@eslint/js": "^9.23.0",
-    "eslint": "^9.23.0",
-    "globals": "^16.0.0",
-    "http-server": "^14.1.1",
-    "husky": "^8.0.0",
-    "lint-staged": "^15.5.0",
-    "prettier": "^3.5.3"
-  },
-  "lint-staged": {
-    "*.js": [
-      "eslint",
-      "prettier --write ."
-    ]
+    "eslint-plugin-jest": "^28.11.0"
   }
 }

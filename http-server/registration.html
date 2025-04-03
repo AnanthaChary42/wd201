@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registration Page</title>
+    <link rel="stylesheet" href="reg.css" />
+</head>
+
+<body>
+    <div class="container">
+
+        <!-- Card for the registration form -->
+        <div class="form-container">
+            <h2>Registration Form</h2>
+            <form id="userForm">
+                <!-- Name row: label and input on the same line -->
+                <div class="input-group">
+                    <label for="name">Name</label>
+                    <input required type="text" id="name" placeholder="Enter full name" />
+                </div>
+
+                <!-- Email row -->
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input required type="email" id="email" placeholder="Enter email" />
+                </div>
+
+                <!-- Password row -->
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input required type="password" id="password" placeholder="Enter password" />
+                </div>
+
+                <!-- Date of Birth row -->
+                <div class="input-group">
+                    <label for="dob">Date of Birth</label>
+                    <input required type="date" id="dob" />
+                </div>
+
+                <!-- Checkbox row -->
+                <div class="checkbox-group">
+                    <input required type="checkbox" id="acceptTerms" />
+                    <label for="acceptTerms">Accept Terms & Conditions</label>
+                </div>
+
+                <!-- Button container: left aligned -->
+                <div class="button-container">
+                    <button type="submit" id="submit">Submit</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Card for the entries table -->
+        <div class="table-container">
+            <h2>Entries</h2>
+
+            <div id="user-entries"></div>
+        </div>
+
+    </div>
+
+    <script src="reg.js"></script>
+</body>
+
+</html>
