@@ -1,5 +1,5 @@
 export default [
-    {
-        ignores: ['node_modules', 'dist', '__tests__'],
-    },
+  {
+    ignores: ["node_modules", "dist", "__tests__"],
+  },
 ];
