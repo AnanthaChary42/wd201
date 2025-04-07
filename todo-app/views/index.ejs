@@ -2,26 +2,35 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="/css/styles.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo App</title>
+    <link rel="stylesheet" href="/css/styles.css" />
 </head>
 
 <body>
     <%- include('header.ejs') %>
 
-        <table>
-            <% for (var i=0; i < todos.length; i++) { %>
-                <tr>
-                    <td>
-                        <%= todos[i].title %>
-                    </td>
-                </tr>
-                <% } %>
+        <h1>Todo List</h1>
 
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for (var i=0; i < todos.length; i++) { %>
+                    <tr>
+                        <td>
+                            <%= todos[i].title %>
+                        </td>
+                    </tr>
+                    <% } %>
+            </tbody>
         </table>
+
+        <%- include('footer.ejs') %>
 </body>
-<%- include('footer.ejs') %>
 
 </html>
