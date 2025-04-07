@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>To-Do List</title>
+</head>
+
+<body>
+    <h1>My To-Dos</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Task</th>
+                <th>Completed</th>
+                <th>Created At</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% todos.forEach(todo=> { %>
+                <tr>
+                    <td>
+                        <%= todo.id %>
+                    </td>
+                    <td>
+                        <%= todo.title %>
+                    </td>
+                    <td>
+                        <%= todo.completed ? "Yes" : "No" %>
+                    </td>
+                    <td>
+                        <%= todo.createdAt.toDateString() %>
+                    </td>
+                </tr>
+                <% }) %>
+        </tbody>
+    </table>
+</body>
+
+</html>
