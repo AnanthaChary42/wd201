@@ -29,12 +29,14 @@
                         <%= todo.completed ? "Yes" : "No" %>
                     </td>
                     <td>
-                        <%= todo.createdAt.toDateString() %>
+                        <%= new Date(todo.createdAt).toLocaleDateString() %>
                     </td>
                 </tr>
                 <% }) %>
         </tbody>
     </table>
+
+    <%- include('footer') %>
 </body>
 
 </html>
