@@ -1,36 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Todo App</title>
+    <title>To-Do Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/css/styles.css" />
 </head>
 
-<body>
-    <%- include('header.ejs') %>
+<body class="bg-gray-50 p-8">
+    <div class="grid grid-cols-6">
+        <div class="col-start-2 col-span-4">
 
-        <h1>Todo List</h1>
+            <!-- Header -->
+            <%- include('header.ejs') %>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Title</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% for (var i=0; i < todos.length; i++) { %>
-                    <tr>
-                        <td>
-                            <%= todos[i].title %>
-                        </td>
-                    </tr>
-                    <% } %>
-            </tbody>
-        </table>
+                <!-- Task Form -->
+                <form action="/add-task" method="POST" class="mt-6">
+                    <div class="flex gap-4 items-end">
+                        <div class="flex-auto">
+                            <label for="task" class="block text-sm font-medium text-gray-700 mb-1">Task</label>
+                            <input id="task" name="task" type="text" placeholder="What's next?"
+                                class="border border-gray-300 rounded text-gray-900 w-full p-2" required />
+                        </div>
 
-        <%- include('footer.ejs') %>
+                        <div class="flex-auto">
+                            <label for="dueDate" class="block text-sm font-medium text-gray-700 mb-1">Due Date</label>
+                            <input id="dueDate" name="dueDate" type="date"
+                                class="border border-gray-300 rounded text-gray-900 w-full p-2" required />
+                        </div>
+
+                        <div class="flex-none">
+                            <button type="submit" class="bg-green-600 text-white px-5 py-2 rounded hover:bg-green-700">
+                                Add
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Tasks Display -->
+                <%- include('todos', { overdue: overdue, dueToday: dueToday, dueLater: dueLater }) %>
+
+        </div>
+    </div>
 </body>
 
 </html>

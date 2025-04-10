@@ -2,96 +2,99 @@ const express = require("express");
 const app = express();
 const { Todo } = require("./models");
 const bodyParser = require("body-parser");
-app.use(bodyParser.json());
 const path = require("path");
 
 app.set("view engine", "ejs");
+app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true })); // for form data
+app.use(express.static(path.join(__dirname, "public")));
 
+// Home route - render todos grouped into categories
 app.get("/", async (request, response) => {
   try {
-    const allTodos = await Todo.findAll();
+    const allTodos = await Todo.findAll({ order: [["dueDate", "ASC"]] });
+    const today = new Date().toISOString().split("T")[0];
+
+    const overdue = allTodos.filter(todo => todo.dueDate < today && !todo.completed);
+    const dueToday = allTodos.filter(todo => todo.dueDate === today);
+    const dueLater = allTodos.filter(todo => todo.dueDate > today);
+
     if (request.accepts("html")) {
-      response.render("index", {
-        todos: allTodos
-      });
+      response.render("index", { overdue, dueToday, dueLater });
     } else {
       response.json({ allTodos });
     }
-  }
-  catch (error) {
+  } catch (error) {
     console.log(error);
     return response.status(422).json(error);
   }
 });
 
-app.use(express.static(path.join(__dirname, "public")));
-
-app.get("/todos", async function (_request, response) {
-  console.log("Processing list of all Todos ...");
-  // FILL IN YOUR CODE HERE
-
-  // First, we have to query our PostgerSQL database using Sequelize to get list of all Todos.
-  // Then, we have to respond with all Todos, like:
-  // response.send(todos)
-
-  console.log("Processing list of all Todos ...");
+// RESTful APIs
+app.get("/todos", async (req, res) => {
   try {
     const todos = await Todo.findAll();
-    return response.json(todos);
-
+    return res.json(todos);
   } catch (error) {
     console.log(error);
-    return response.status(422).json(error);
+    return res.status(422).json(error);
   }
 });
 
-app.get("/todos/:id", async function (request, response) {
+app.get("/todos/:id", async (req, res) => {
   try {
-    const todo = await Todo.findByPk(request.params.id);
-    return response.json(todo);
+    const todo = await Todo.findByPk(req.params.id);
+    return res.json(todo);
   } catch (error) {
     console.log(error);
-    return response.status(422).json(error);
+    return res.status(422).json(error);
   }
 });
 
-app.post("/todos", async function (request, response) {
+app.post("/todos", async (req, res) => {
   try {
-    const todo = await Todo.addTodo(request.body);
-    return response.json(todo);
+    const todo = await Todo.addTodo(req.body);
+    return res.json(todo);
   } catch (error) {
     console.log(error);
-    return response.status(422).json(error);
+    return res.status(422).json(error);
   }
 });
 
-app.put("/todos/:id/markAsCompleted", async function (request, response) {
-  const todo = await Todo.findByPk(request.params.id);
+// Handle form POST (from index.ejs)
+app.post("/add-task", async (req, res) => {
+  try {
+    const { task, dueDate } = req.body;
+    await Todo.create({
+      title: task,
+      dueDate: dueDate,
+      completed: false
+    });
+    res.redirect("/");
+  } catch (error) {
+    console.log(error);
+    return res.status(422).json(error);
+  }
+});
+
+app.put("/todos/:id/markAsCompleted", async (req, res) => {
+  const todo = await Todo.findByPk(req.params.id);
   try {
     const updatedTodo = await todo.markAsCompleted();
-    return response.json(updatedTodo);
+    return res.json(updatedTodo);
   } catch (error) {
     console.log(error);
-    return response.status(422).json(error);
+    return res.status(422).json(error);
   }
 });
 
-app.delete("/todos/:id", async function (request, response) {
-  console.log("We have to delete a Todo with ID: ", request.params.id);
-  // FILL IN YOUR CODE HERE
-
-  // First, we have to query our database to delete a Todo by ID.
-  // Then, we have to respond back with true/false based on whether the Todo was deleted or not.
-  // response.send(true)
-
-  console.log("We have to delete a Todo with ID: ", request.params.id);
+app.delete("/todos/:id", async (req, res) => {
   try {
-    const deleted = await Todo.destroy({ where: { id: request.params.id } });
-    return response.send(deleted == 1);
-  }
-  catch (error) {
+    const deleted = await Todo.destroy({ where: { id: req.params.id } });
+    return res.send(deleted === 1);
+  } catch (error) {
     console.log(error);
-    return response.status(422).send(false);
+    return res.status(422).send(false);
   }
 });
 
