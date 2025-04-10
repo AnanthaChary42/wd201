@@ -1,66 +1,44 @@
-<div class="mt-10 space-y-6">
-    <!-- Overdue -->
+<div>
     <div>
-        <h5 class="text-lg font-semibold text-red-600">
-            Overdue (<span id="count-overdue">
-                <%= overdue.length %>
-            </span>)
-        </h5>
-        <ul class="list-none">
+        <h5>Overdue</h5>
+        <span id="count-overdue">
+            <%= overdue.length %>
+        </span>
+        <ul>
             <% overdue.forEach(todo=> { %>
                 <li>
-                    <div class="flex items-center w-fit my-2 px-2 py-1">
-                        <input type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded"
-                            <%=todo.completed ? 'checked' : '' %> />
-                        <label class="ml-2 text-sm text-gray-600 cursor-pointer">
-                            <%= todo.title %> (Due: <%= todo.dueDate %>)
-                                    <span class="text-xs text-gray-500 italic">(Added: <%= todo.createdAt %>)</span>
-                        </label>
-                    </div>
+                    <input type="checkbox" <%=todo.completed ? "checked" : "" %> />
+                    <%= todo.title %> (Due: <%= todo.dueDate %>)
                 </li>
                 <% }) %>
         </ul>
     </div>
 
-    <!-- Due Today -->
     <div>
-        <h5 class="text-lg font-semibold text-yellow-600">
-            Due Today (<span id="count-due-today">
-                <%= dueToday.length %>
-            </span>)
-        </h5>
-        <ul class="list-none">
+        <h5>Due Today</h5>
+        <span id="count-due-today">
+            <%= dueToday.length %>
+        </span>
+        <ul>
             <% dueToday.forEach(todo=> { %>
                 <li>
-                    <div class="flex items-center w-fit my-2 px-2 py-1">
-                        <input type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded"
-                            <%=todo.completed ? 'checked' : '' %> />
-                        <label class="ml-2 text-sm text-gray-600 cursor-pointer">
-                            <%= todo.title %>
-                        </label>
-                    </div>
+                    <input type="checkbox" <%=todo.completed ? "checked" : "" %> />
+                    <%= todo.title %>
                 </li>
                 <% }) %>
         </ul>
     </div>
 
-    <!-- Due Later -->
     <div>
-        <h5 class="text-lg font-semibold text-blue-600">
-            Due Later (<span id="count-due-later">
-                <%= dueLater.length %>
-            </span>)
-        </h5>
-        <ul class="list-none">
+        <h5>Due Later</h5>
+        <span id="count-due-later">
+            <%= dueLater.length %>
+        </span>
+        <ul>
             <% dueLater.forEach(todo=> { %>
                 <li>
-                    <div class="flex items-center w-fit my-2 px-2 py-1">
-                        <input type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded"
-                            <%=todo.completed ? 'checked' : '' %> />
-                        <label class="ml-2 text-sm text-gray-600 cursor-pointer">
-                            <%= todo.title %> (Due: <%= todo.dueDate %>)
-                        </label>
-                    </div>
+                    <input type="checkbox" <%=todo.completed ? "checked" : "" %> />
+                    <%= todo.title %> (Due: <%= todo.dueDate %>)
                 </li>
                 <% }) %>
         </ul>
