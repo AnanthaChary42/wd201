@@ -2,9 +2,7 @@
     <!-- Overdue -->
     <div>
         <h5 class="text-lg font-semibold text-red-600">
-            Overdue (<span id="count-overdue">
-                <%= overdue.length %>
-            </span>)
+            Overdue (<%= overdue.length %>)
         </h5>
         <ul class="list-none">
             <% overdue.forEach(todo=> { %>
@@ -24,9 +22,7 @@
     <!-- Due Today -->
     <div>
         <h5 class="text-lg font-semibold text-yellow-600">
-            Due Today (<span id="count-due-today">
-                <%= dueToday.length %>
-            </span>)
+            Due Today (<%= dueToday.length %>)
         </h5>
         <ul class="list-none">
             <% dueToday.forEach(todo=> { %>
@@ -46,9 +42,7 @@
     <!-- Due Later -->
     <div>
         <h5 class="text-lg font-semibold text-blue-600">
-            Due Later (<span id="count-due-later">
-                <%= dueLater.length %>
-            </span>)
+            Due Later (<%= dueLater.length %>)
         </h5>
         <ul class="list-none">
             <% dueLater.forEach(todo=> { %>
