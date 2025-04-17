@@ -1,21 +1,19 @@
 const express = require("express");
 const app = express();
-var csurf = require("csurf");
+var csurf = require("tiny-csrf");
 
 const { Todo } = require("./models");
 const bodyParser = require("body-parser");
 var cookieparser = require("cookie-parser");
 const path = require("path");
-const { title
-
-} = require("process");
+const { title } = require("process");
 
 app.set("view engine", "ejs");
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(cookieparser("shh! some secret string"));
-app.use(csurf({ cookie: true }));
+app.use(csurf("This_should_be_32_character_long", ["POST", "PUT", "DELETE"]));
 
 app.get("/", async (request, response) => {
   try {
@@ -79,7 +77,6 @@ app.post("/todos", async (req, res) => {
     return res.status(422).json(error);
   }
 });
-
 
 app.post("/add-task", async (req, res) => {
   try {
