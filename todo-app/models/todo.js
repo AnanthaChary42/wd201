@@ -21,7 +21,9 @@ module.exports = (sequelize, DataTypes) => {
     static async overdue() {
       return this.findAll({
         where: {
-          dueDate: { [sequelize.Op.lt]: new Date().toISOString().split("T")[0] },
+          dueDate: {
+            [sequelize.Op.lt]: new Date().toISOString().split("T")[0],
+          },
           completed: false,
         },
         order: [["dueDate", "ASC"]],
@@ -42,9 +44,18 @@ module.exports = (sequelize, DataTypes) => {
     static async dueLater() {
       return this.findAll({
         where: {
-          dueDate: { [sequelize.Op.gt]: new Date().toISOString().split("T")[0] },
+          dueDate: {
+            [sequelize.Op.gt]: new Date().toISOString().split("T")[0],
+          },
         },
         order: [["dueDate", "ASC"]],
+      });
+    }
+    static async remove(id) {
+      return this.destroy({
+        where: {
+          id,
+        },
       });
     }
 
@@ -72,7 +83,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Todo",
-    }
+    },
   );
 
   return Todo;

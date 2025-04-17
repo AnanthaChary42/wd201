@@ -1,4 +1,12 @@
-body{
-    background-color : gray;
-    font-family: 'Courier New', Courier, monospace;
+body {
+  background-color: gray;
+  font-family: "Courier New", Courier, monospace;
+}
+
+.Todo-Item .trash-icon {
+  display: none;
+}
+
+.Todo-Item:hover .trash-icon {
+  display: inline-block;
 }

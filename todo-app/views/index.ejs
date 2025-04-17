@@ -5,12 +5,31 @@
     <title>To-Do Manager</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/css/styles.css">
+    <script>
+        function updateTodo(id) {
+            fetch(`/todos/${id}/markAsCompleted`, {
+                method: "put",
+                headers: { "Content-Type": "application/json" },
+            })
+                .then(res => { if (res.ok) window.location.reload(); })
+                .catch(err => console.error(err));
+        }
+        function deleteTodo(id) {
+            fetch(`/todos/${id}`, {
+                method: "delete",
+                headers: { "Content-Type": "application/json" },
+            })
+                .then(res => { if (res.ok) window.location.reload(); })
+                .catch(err => console.error(err));
+        }
+    </script>
 </head>
 
 <body class="bg-gray-50 p-8">
     <div class="grid grid-cols-6">
         <div class="col-start-2 col-span-4">
             <%- include('header.ejs') %>
+
                 <form action="/add-task" method="POST" class="mt-6">
                     <div class="flex gap-4 items-end">
                         <div class="flex-auto">
@@ -29,7 +48,19 @@
                         </div>
                     </div>
                 </form>
-                <%- include('todos', { overdue: overdue, dueToday: dueToday, dueLater: dueLater }) %>
+
+                <h2 class="text-xl font-semibold mt-8 mb-2 text-red-600">Overdue</h2>
+                <%- include('todos', { title: 'Overdue' , data: overdue }) %>
+
+                    <h2 class="text-xl font-semibold mt-8 mb-2 text-yellow-600">Due Today</h2>
+                    <%- include('todos', { title: 'Due Today' , data: dueToday }) %>
+
+                        <h2 class="text-xl font-semibold mt-8 mb-2 text-green-600">Due Later</h2>
+                        <%- include('todos', { title: 'Due Later' , data: dueLater }) %>
+
+                            <h2 class="text-xl font-semibold mt-8 mb-2 text-gray-600">Completed</h2>
+                            <%- include('todos', { title: 'Completed' , data: completed }) %>
+
         </div>
     </div>
 </body>
