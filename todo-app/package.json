@@ -19,6 +19,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "csurf": "^1.10.0",
     "ejs": "^3.1.10",
     "epress": "^0.0.1-security",
     "express": "^5.1.0",
@@ -29,6 +31,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.24.0",
+    "cheerio": "^1.0.0",
     "eslint": "^9.24.0",
     "globals": "^16.0.0",
     "husky": "^9.1.7",

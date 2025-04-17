@@ -1,14 +1,21 @@
 const express = require("express");
 const app = express();
+var csurf = require("csurf");
+
 const { Todo } = require("./models");
 const bodyParser = require("body-parser");
+var cookieparser = require("cookie-parser");
 const path = require("path");
-const { title } = require("process");
+const { title
+
+} = require("process");
 
 app.set("view engine", "ejs");
 app.use(bodyParser.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
+app.use(cookieparser("shh! some secret string"));
+app.use(csurf({ cookie: true }));
 
 app.get("/", async (request, response) => {
   try {
@@ -29,6 +36,7 @@ app.get("/", async (request, response) => {
         dueToday,
         dueLater,
         completed,
+        csrfToken: request.csrfToken(),
       });
     } else {
       response.json({
@@ -65,13 +73,13 @@ app.get("/todos/:id", async (req, res) => {
 
 app.post("/todos", async (req, res) => {
   try {
-    const todo = await Todo.addTodo(req.body);
-    return res.json(todo);
+    await Todo.addTodo(req.body);
+    return res.redirect("/");
   } catch (error) {
-    console.log(error);
     return res.status(422).json(error);
   }
 });
+
 
 app.post("/add-task", async (req, res) => {
   try {
