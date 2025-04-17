@@ -14,7 +14,7 @@ function extractCsrfToken(res) {
 describe("Todo Application", function () {
   beforeAll(async () => {
     await db.sequelize.sync({ force: true });
-    server = app.listen(4000, () => { });
+    server = app.listen(4000, () => {});
     agent = request.agent(server);
   });
 
@@ -33,12 +33,12 @@ describe("Todo Application", function () {
 
     const response = await agent
       .post("/todos")
-      // .set("Accept", "text/html") 
+      // .set("Accept", "text/html")
       .send({
         title: "Buy milk",
         dueDate: new Date().toISOString(),
         completed: false,
-        "_csrf": csrfToken
+        _csrf: csrfToken,
       });
 
     expect(response.statusCode).toBe(302);
@@ -51,7 +51,7 @@ describe("Todo Application", function () {
       title: "Buy milk",
       dueDate: new Date().toISOString(),
       completed: false,
-      _csrf: csrfToken
+      _csrf: csrfToken,
     });
 
     const groupedTodosResponse = await agent
@@ -64,9 +64,11 @@ describe("Todo Application", function () {
     res = await agent.get("/");
     csrfToken = extractCsrfToken(res);
 
-    const markCompleteResponse = await agent.put(`/todos/${latestTodo.id}/markAsCompleted`).send({
-      _csrf: csrfToken,
-    });
+    const markCompleteResponse = await agent
+      .put(`/todos/${latestTodo.id}/markAsCompleted`)
+      .send({
+        _csrf: csrfToken,
+      });
 
     const parsedUpdateResponse = JSON.parse(markCompleteResponse.text);
     expect(parsedUpdateResponse.completed).toBe(true);
