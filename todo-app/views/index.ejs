@@ -2,74 +2,91 @@
 <html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="<%= csrfToken %>">
-    <title>To-Do Manager</title>
+    <title>Todo App</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="/css/styles.css">
-    <script>
-        const token = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
-        function updateTodo(id) {
-            fetch(`/todos/${id}/markAsCompleted`, {
-                method: "put",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ _csrf: token })
-            })
-                .then(res => { if (res.ok) window.location.reload(); })
-                .catch(err => console.error(err));
-        }
-        function deleteTodo(id) {
-            fetch(`/todos/${id}`, {
-                method: "delete",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ _csrf: token })
-            })
-                .then(res => { if (res.ok) window.location.reload(); })
-                .catch(err => console.error(err));
-        }
-    </script>
 </head>
 
-<body class="bg-gray-50 p-8">
-    <div class="grid grid-cols-6">
-        <div class="col-start-2 col-span-4">
-            <%- include('header.ejs') %>
+<body class="bg-gray-50 p-6">
+    <div class="max-w-3xl mx-auto">
+        <h1 class="text-2xl font-bold text-center mb-4">Todo Manager</h1>
 
-                <form action="/add-task" method="POST" class="mt-6">
-                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                    <div class="flex gap-4 items-end">
-                        <div class="flex-auto">
-                            <label for="task" class="block text-sm font-medium text-gray-700 mb-1">Task</label>
-                            <input id="task" name="task" type="text" placeholder="What's next?"
-                                class="border border-gray-300 rounded text-gray-900 w-full p-2" required>
-                        </div>
-                        <div class="flex-auto">
-                            <label for="dueDate" class="block text-sm font-medium text-gray-700 mb-1">Due Date</label>
-                            <input id="dueDate" name="dueDate" type="date"
-                                class="border border-gray-300 rounded text-gray-900 w-full p-2" required>
-                        </div>
-                        <div class="flex-none">
-                            <button type="submit"
-                                class="bg-green-600 text-white px-5 py-2 rounded hover:bg-green-700">Add Todo</button>
-                        </div>
-                    </div>
-                </form>
+        <!-- ✅ Form with updated name attributes and button type -->
+        <form action="/add-task" method="POST" class="mb-6">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <div class="grid grid-cols-3 gap-4">
+                <input name="title" type="text" placeholder="Task" class="p-2 border rounded" required>
+                <input name="dueDate" type="date" class="p-2 border rounded" required>
+                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add</button>
+            </div>
+        </form>
 
-                <h2 class="text-xl font-semibold mt-8 mb-2 text-red-600">Overdue</h2>
-                <%- include('todos', { title: 'Overdue' , data: overdue }) %>
+        <% const sections=[ { title: "Overdue" , data: overdue, color: "text-red-600" , id: "count-overdue" }, {
+            title: "Due Today" , data: dueToday, color: "text-yellow-600" , id: "count-due-today" }, {
+            title: "Due Later" , data: dueLater, color: "text-green-600" , id: "count-due-later" }, { title: "Completed"
+            , data: completed, color: "text-gray-600" , id: "count-completed" }, ]; %>
 
-                    <h2 class="text-xl font-semibold mt-8 mb-2 text-yellow-600">Due Today</h2>
-                    <%- include('todos', { title: 'Due Today' , data: dueToday }) %>
+            <% sections.forEach(section=> { %>
+                <h2 class="text-xl font-semibold mt-6 mb-2 <%= section.color %>">
+                    <%= section.title %>
+                        <!-- ✅ Count with ID -->
+                        <span id="<%= section.id %>"
+                            class="bg-gray-100 text-gray-800 text-sm font-medium ml-2 px-2.5 py-0.5 rounded dark:bg-gray-200 dark:text-gray-900">
+                            <%= section.data.length %>
+                        </span>
+                </h2>
 
-                        <h2 class="text-xl font-semibold mt-8 mb-2 text-green-600">Due Later</h2>
-                        <%- include('todos', { title: 'Due Later' , data: dueLater }) %>
-
-                            <h2 class="text-xl font-semibold mt-8 mb-2 text-gray-600">Completed</h2>
-                            <%- include('todos', { title: 'Completed' , data: completed }) %>
-
-        </div>
+                <ul class="space-y-2">
+                    <% section.data.forEach(todo=> { %>
+                        <li class="Todo-Item flex justify-between items-center p-2 bg-white rounded shadow">
+                            <div class="flex items-center gap-2">
+                                <!-- ✅ Label with checkbox and for attribute -->
+                                <label for="todo-checkbox-<%= todo.id %>"
+                                    class="flex items-center gap-2 cursor-pointer">
+                                    <input id="todo-checkbox-<%= todo.id %>" type="checkbox" <%=todo.completed
+                                        ? "checked" : "" %>
+                                    onclick="updateTodo(<%= todo.id %>, <%= !todo.completed %>)"
+                                            class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300
+                                            focus:ring-blue-500">
+                                            <span class="<%= todo.completed ? 'line-through text-gray-500' : '' %>">
+                                                <%= todo.title %>
+                                            </span>
+                                </label>
+                                <span class="text-sm text-gray-400">(Due: <%= todo.dueDate %>)</span>
+                            </div>
+                            <button onclick="deleteTodo(<%= todo.id %>)"
+                                class="text-sm text-red-500 hover:text-red-700">Delete</button>
+                        </li>
+                        <% }) %>
+                </ul>
+                <% }) %>
     </div>
+
+    <script>
+        const token = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+
+        function updateTodo(id, completed) {
+            fetch(`/todos/${id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ completed, _csrf: token }),
+            }).then(res => {
+                if (res.ok) location.reload();
+            });
+        }
+
+        function deleteTodo(id) {
+            fetch(`/todos/${id}`, {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ _csrf: token }),
+            }).then(res => {
+                if (res.ok) location.reload();
+            });
+        }
+    </script>
 </body>
 
 </html>

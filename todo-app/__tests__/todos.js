@@ -1,8 +1,8 @@
-const request = require("supertest");
-var cheerio = require("cheerio");
-
-const db = require("../models/index");
+"use strict";
 const app = require("../app");
+const request = require("supertest");
+const cheerio = require("cheerio");
+const db = require("../models/index");
 
 let server, agent;
 
@@ -14,7 +14,7 @@ function extractCsrfToken(res) {
 describe("Todo Application", function () {
   beforeAll(async () => {
     await db.sequelize.sync({ force: true });
-    server = app.listen(4000, () => {});
+    server = app.listen(4000, () => { });
     agent = request.agent(server);
   });
 
@@ -27,13 +27,13 @@ describe("Todo Application", function () {
     }
   });
 
+  // Test creating a todo
   test("Creates a todo and responds with json at /todos POST endpoint", async () => {
     const res = await agent.get("/");
     const csrfToken = extractCsrfToken(res);
 
     const response = await agent
       .post("/todos")
-      // .set("Accept", "text/html")
       .send({
         title: "Buy milk",
         dueDate: new Date().toISOString(),
@@ -41,9 +41,10 @@ describe("Todo Application", function () {
         _csrf: csrfToken,
       });
 
-    expect(response.statusCode).toBe(302);
+    expect(response.statusCode).toBe(302);  // assuming redirect after creation
   });
 
+  // Test marking a todo as complete
   test("Mark a todo as complete", async () => {
     let res = await agent.get("/");
     let csrfToken = extractCsrfToken(res);
@@ -65,8 +66,9 @@ describe("Todo Application", function () {
     csrfToken = extractCsrfToken(res);
 
     const markCompleteResponse = await agent
-      .put(`/todos/${latestTodo.id}/markAsCompleted`)
+      .put(`/todos/${latestTodo.id}`)
       .send({
+        completed: true,
         _csrf: csrfToken,
       });
 
@@ -74,45 +76,30 @@ describe("Todo Application", function () {
     expect(parsedUpdateResponse.completed).toBe(true);
   });
 
-  //   const markCompleteResponse = await agent
-  //     .put(`/todos/${todoID}/markAsCompleted`)
-  //     .send();
-  //   const parsedUpdateResponse = JSON.parse(markCompleteResponse.text);
-  //   expect(parsedUpdateResponse.completed).toBe(true);
-  // });
+  // Test deleting a todo
+  test("Deletes a todo with the given ID if it exists", async () => {
+    const res = await agent.get("/");
+    const csrfToken = extractCsrfToken(res);
 
-  // test("Fetches all todos in the database using /todos endpoint", async () => {
-  //   await agent.post("/todos").send({
-  //     title: "Buy xbox",
-  //     dueDate: new Date().toISOString(),
-  //     completed: false,
-  //   });
-  //   await agent.post("/todos").send({
-  //     title: "Buy ps3",
-  //     dueDate: new Date().toISOString(),
-  //     completed: false,
-  //   });
-  //   const response = await agent.get("/todos");
-  //   const parsedResponse = JSON.parse(response.text);
+    const createResponse = await agent
+      .post("/todos")
+      .send({
+        title: "Buy milk",
+        dueDate: new Date().toISOString(),
+        completed: false,
+        _csrf: csrfToken,
+      });
 
-  //   expect(parsedResponse.length).toBe(4);
-  //   expect(parsedResponse[3]["title"]).toBe("Buy ps3");
-  // });
+    const createdTodo = JSON.parse(createResponse.text);
+    const deleteResponse = await agent
+      .delete(`/todos/${createdTodo.id}`)
+      .send({ _csrf: csrfToken });
 
-  // test("Deletes a todo with the given ID if it exists and sends a boolean response", async () => {
-  //   const response = await agent.post("/todos").send({
-  //     title: "Buy milk",
-  //     dueDate: new Date().toISOString(),
-  //     completed: false,
-  //   });
+    expect(deleteResponse.statusCode).toBe(200);
+    expect(deleteResponse.text).toBe("true");  // Assuming success message is "true"
 
-  //   const todo = JSON.parse(response.text);
-  //   const deleteResponse = await agent.delete(`/todos/${todo.id}`);
-
-  //   expect(deleteResponse.statusCode).toBe(200);
-  //   expect(deleteResponse.text).toBe("true");
-
-  //   const fetchResponse = await agent.get(`/todos/${todo.id}`);
-  //   expect(fetchResponse.body).toBeNull();
-  // });
+    // Ensure it's deleted
+    const fetchResponse = await agent.get(`/todos/${createdTodo.id}`);
+    expect(fetchResponse.body).toBeNull();  // Todo should no longer exist
+  });
 });
