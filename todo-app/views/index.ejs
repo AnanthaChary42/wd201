@@ -13,7 +13,6 @@
     <div class="max-w-3xl mx-auto">
         <h1 class="text-2xl font-bold text-center mb-4">Todo Manager</h1>
 
-        <!-- ✅ Form with updated name attributes and button type -->
         <form action="/add-task" method="POST" class="mb-6">
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <div class="grid grid-cols-3 gap-4">
@@ -26,23 +25,21 @@
         <% const sections=[ { title: "Overdue" , data: overdue, color: "text-red-600" , id: "count-overdue" }, {
             title: "Due Today" , data: dueToday, color: "text-yellow-600" , id: "count-due-today" }, {
             title: "Due Later" , data: dueLater, color: "text-green-600" , id: "count-due-later" }, { title: "Completed"
-            , data: completed, color: "text-gray-600" , id: "count-completed" }, ]; %>
+            , data: completed, color: "text-gray-600" , id: "count-completed" } ]; %>
 
             <% sections.forEach(section=> { %>
                 <h2 class="text-xl font-semibold mt-6 mb-2 <%= section.color %>">
                     <%= section.title %>
-                        <!-- ✅ Count with ID -->
                         <span id="<%= section.id %>"
-                            class="bg-gray-100 text-gray-800 text-sm font-medium ml-2 px-2.5 py-0.5 rounded dark:bg-gray-200 dark:text-gray-900">
+                            class="bg-gray-100 text-gray-800 text-sm font-medium ml-2 px-2.5 py-0.5 rounded">
                             <%= section.data.length %>
                         </span>
                 </h2>
 
                 <ul class="space-y-2">
                     <% section.data.forEach(todo=> { %>
-                        <li class="Todo-Item flex justify-between items-center p-2 bg-white rounded shadow">
+                        <li class="Todo-Item group flex justify-between items-center p-2 bg-white rounded shadow">
                             <div class="flex items-center gap-2">
-                                <!-- ✅ Label with checkbox and for attribute -->
                                 <label for="todo-checkbox-<%= todo.id %>"
                                     class="flex items-center gap-2 cursor-pointer">
                                     <input id="todo-checkbox-<%= todo.id %>" type="checkbox" <%=todo.completed
@@ -56,8 +53,18 @@
                                 </label>
                                 <span class="text-sm text-gray-400">(Due: <%= todo.dueDate %>)</span>
                             </div>
-                            <button onclick="deleteTodo(<%= todo.id %>)"
-                                class="text-sm text-red-500 hover:text-red-700">Delete</button>
+
+                            <!-- hover‑only trash icon -->
+                            <button type="button" onclick="deleteTodo(<%= todo.id %>)" aria-label="Delete"
+                                class="opacity-0 group-hover:opacity-100 p-1 text-red-500 hover:text-red-700 focus:outline-none transition-opacity duration-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2
+                                     2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M8
+                                     7V4a1 1 0 011-1h6a1 1 0 011 1v3" />
+                                </svg>
+                                <span class="sr-only">Delete</span>
+                            </button>
                         </li>
                         <% }) %>
                 </ul>
